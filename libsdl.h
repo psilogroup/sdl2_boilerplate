@@ -1,23 +1,20 @@
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <string>
 SDL_Window* window = NULL;    
-SDL_Surface* screenSurface = NULL;
 SDL_Renderer* renderer = NULL;
 
 SDL_Window* Startup(std::string title, int w, int h)
 {
     //Initialize SDL
-    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER ) < 0 )
+    if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {
         printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
         return nullptr;
     }
-    //get screen size
-    SDL_DisplayMode dm;
-    SDL_GetDesktopDisplayMode(0, &dm);
 
 
-    window = SDL_CreateWindow( title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow(title.c_str(), 1027, 768, 0);
+    
     
     if( window == NULL )
     {
@@ -25,14 +22,14 @@ SDL_Window* Startup(std::string title, int w, int h)
         return nullptr;
     }
 
-    screenSurface = SDL_GetWindowSurface( window );
+  //  screenSurface = SDL_GetWindowSurface( window );
 
-    renderer = SDL_CreateRenderer(window,-1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    //Fill the surface white
-    //SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
-    
-    //Update the surface
-    //SDL_UpdateWindowSurface( window );
+    renderer = SDL_CreateRenderer(window,NULL );
+    if( renderer == NULL )
+    {
+        printf( "Renderer could not be created! SDL_Error: %s\n", SDL_GetError() );
+        return nullptr;
+    }
 
     return window;
             
@@ -68,10 +65,10 @@ void DrawFilledCircle(int32_t centreX, int32_t centreY, int32_t radius, uint32_t
     while (x >= y)
     {
         //  Each of the following renders an octant of the circle
-        SDL_RenderDrawLine(renderer, centreX - x, centreY - y, centreX + x, centreY - y);
-        SDL_RenderDrawLine(renderer, centreX - x, centreY + y, centreX + x, centreY + y);
-        SDL_RenderDrawLine(renderer, centreX - y, centreY - x, centreX + y, centreY - x);
-        SDL_RenderDrawLine(renderer, centreX - y, centreY + x, centreX + y, centreY + x);
+        SDL_RenderLine(renderer, centreX - x, centreY - y, centreX + x, centreY - y);
+        SDL_RenderLine(renderer, centreX - x, centreY + y, centreX + x, centreY + y);
+        SDL_RenderLine(renderer, centreX - y, centreY - x, centreX + y, centreY - x);
+        SDL_RenderLine(renderer, centreX - y, centreY + x, centreX + y, centreY + x);
 
         if (error <= 0)
         {
@@ -109,14 +106,14 @@ void DrawCircle(int32_t centreX, int32_t centreY, int32_t radius, uint32_t color
     while (x >= y)
     {
         //  Each of the following renders an octant of the circle
-        SDL_RenderDrawPoint(renderer, centreX + x, centreY - y);
-        SDL_RenderDrawPoint(renderer, centreX + x, centreY + y);
-        SDL_RenderDrawPoint(renderer, centreX - x, centreY - y);
-        SDL_RenderDrawPoint(renderer, centreX - x, centreY + y);
-        SDL_RenderDrawPoint(renderer, centreX + y, centreY - x);
-        SDL_RenderDrawPoint(renderer, centreX + y, centreY + x);
-        SDL_RenderDrawPoint(renderer, centreX - y, centreY - x);
-        SDL_RenderDrawPoint(renderer, centreX - y, centreY + x);
+        SDL_RenderPoint(renderer, centreX + x, centreY - y);
+        SDL_RenderPoint(renderer, centreX + x, centreY + y);
+        SDL_RenderPoint(renderer, centreX - x, centreY - y);
+        SDL_RenderPoint(renderer, centreX - x, centreY + y);
+        SDL_RenderPoint(renderer, centreX + y, centreY - x);
+        SDL_RenderPoint(renderer, centreX + y, centreY + x);
+        SDL_RenderPoint(renderer, centreX - y, centreY - x);
+        SDL_RenderPoint(renderer, centreX - y, centreY + x);
 
         if (error <= 0)
         {
@@ -144,7 +141,7 @@ void DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t color)
 
     SDL_SetRenderDrawColor(renderer, r, g, b, 255);
 
-    SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+    SDL_RenderLine(renderer, x1, y1, x2, y2);
 }
 
 //draw rectangle
@@ -158,7 +155,7 @@ void DrawRectangle(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t color)
     SDL_SetRenderDrawColor(renderer, r, g, b, 255);
 
     SDL_Rect rect = { x, y, w, h };
-    SDL_RenderDrawRect(renderer, &rect);
+    //SDL_RenderRect(renderer, &rect);
 }
 
 //draw filled rectangle
@@ -172,7 +169,7 @@ void DrawFilledRectangle(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t co
     SDL_SetRenderDrawColor(renderer, r, g, b, 255);
 
     SDL_Rect rect = { x, y, w, h };
-    SDL_RenderFillRect(renderer, &rect);
+    //SDL_RenderFillRect(renderer, &rect);
 }
 
 //clear screen

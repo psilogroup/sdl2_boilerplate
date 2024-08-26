@@ -18,19 +18,19 @@ void mainloop()
     {
         while (SDL_PollEvent(&event))
         {
-            if (event.type == SDL_QUIT)
+            if (event.type == SDL_EVENT_QUIT)
             {
                 quit = true;
             }
 
             //handle escape key
-            if (event.type == SDL_KEYDOWN)
-            {
-                if (event.key.keysym.sym == SDLK_ESCAPE)
-                {
-                    quit = true;
-                }
-            }
+            // if (event.type == SDL_EVENT_KEY_DOWN)
+            // {
+            //     if (event.key.keysym.sym == SDLK_ESCAPE)
+            //     {
+            //         quit = true;
+            //     }
+            // }
 
             Draw();
             
